@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PhotoBooth</title>
+
+    <link rel="stylesheet" href="css.css">
+
+</head>
+
+
+<body>
+
+    <main class="booth">
+
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
+        <header class="header">
+
+            <div class="brand">
+
+                <span class="brand-icon">
+                    ✦
+                </span>
+
+                <span>
+                    PHOTOBOOTH
+                </span>
+
+            </div>
+
+
+            <div class="header-number">
+                01 / 03
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================
+             INTRO
+        ========================== -->
+
+        <section class="intro">
+
+            <p class="eyebrow">
+                CAPTURE THE MOMENT
+            </p>
+
+
+            <h1>
+                Your moment,<br>
+
+                <em>
+                    beautifully framed.
+                </em>
+            </h1>
+
+
+            <p class="description">
+                Take three photos and create
+                your own classic photo strip.
+            </p>
+
+        </section>
+
+
+
+        <!-- =========================
+             CAMERA
+        ========================== -->
+
+        <section class="camera-wrapper">
+
+
+            <div class="camera-top">
+
+                <span>
+                    LIVE PREVIEW
+                </span>
+
+
+                <span class="camera-status">
+
+                    <span class="status-dot">
+                    </span>
+
+                    READY
+
+                </span>
+
+            </div>
+
+
+
+            <div class="camera">
+
+                <video
+                    id="video"
+                    autoplay
+                    playsinline>
+                </video>
+
+            </div>
+
+
+
+            <div class="camera-bottom">
+
+                <span>
+                    FRONT CAMERA
+                </span>
+
+
+                <span>
+                    PHOTO 01 — 03
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             FILTERS
+        ========================== -->
+
+        <section class="filters-section">
+
+
+            <p class="filter-title">
+                CAMERA FILTERS
+            </p>
+
+
+            <div class="filters">
+
+
+                <button
+                    class="filter-btn active"
+                    data-filter="none">
+
+                    Normal
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    data-filter="grayscale(100%)">
+
+                    B&W
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    data-filter="sepia(100%)">
+
+                    Vintage
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    data-filter="contrast(140%) saturate(130%)">
+
+                    Vivid
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    data-filter="brightness(120%) contrast(110%)">
+
+                    Bright
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    data-filter="saturate(180%)">
+
+                    Color
+
+                </button>
+
+
+                <button
+                    class="filter-btn"
+                    data-filter="hue-rotate(90deg)">
+
+                    Cool
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             COUNTDOWN
+        ========================== -->
+
+        <div id="countdown">
+
+            <p id="time"></p>
+
+        </div>
+
+
+
+        <!-- =========================
+             CONTROLS
+        ========================== -->
+
+        <section class="controls">
+
+
+            <button
+                id="start"
+                class="btn secondary-btn">
+
+                <span>
+                    Start Camera
+                </span>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </button>
+
+
+
+            <button
+                id="capture"
+                class="btn primary-btn">
+
+                <span class="camera-icon">
+                    ●
+                </span>
+
+                Take Photo
+
+            </button>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             TEMPORARY CANVAS
+        ========================== -->
+
+        <canvas id="canvas"></canvas>
+
+
+
+        <!-- =========================
+             RESULT
+        ========================== -->
+
+        <section class="result-section">
+
+
+            <div class="result-heading">
+
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR PHOTOS
+                    </p>
+
+
+                    <h2>
+                        Photo Strip
+                    </h2>
+
+                </div>
+
+
+                <h1
+                    id="see"
+                    class="see-button">
+
+                    View Here →
+
+                </h1>
+
+
+            </div>
+
+
+
+            <div class="final-wrapper">
+
+                <canvas id="final"></canvas>
+
+            </div>
+
+
+
+            <div id="result"></div>
+
+
+
+            <a
+                id="download"
+                download="photo.png"
+                class="download-button">
+
+                <span>
+                    Download Photo
+                </span>
+
+
+                <span>
+                    ↓
+                </span>
+
+            </a>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <footer>
+
+            <span>
+                PHOTOBOOTH
+            </span>
+
+
+            <span>
+                ADRIAN • 2026
+            </span>
+
+
+            <span>
+                MADE WITH MOMENTS
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+
+    <script>
+
+
+        // ========================================
+        // HTML ELEMENTS
+        // ========================================
+
+        const video =
+            document.getElementById("video");
+
+        const canvas =
+            document.getElementById("canvas");
+
+        const final =
+            document.getElementById("final");
+
+        const captureButton =
+            document.getElementById("capture");
+
+        const start =
+            document.getElementById("start");
+
+        const download =
+            document.getElementById("download");
+
+        const res =
+            document.getElementById("result");
+
+        const see =
+            document.getElementById("see");
+
+        const time =
+            document.getElementById("time");
+
+
+
+        // ========================================
+        // PHOTO ARRAY
+        // ========================================
+
+        let photos = [];
+
+
+
+        // ========================================
+        // FILTER
+        // ========================================
+
+        let currentFilter = "none";
+
+
+
+        // ========================================
+        // INTERVAL
+        // ========================================
+
+        let interval = null;
+
+
+
+        // ========================================
+        // FILTER BUTTONS
+        // ========================================
+
+        const filterButtons =
+            document.querySelectorAll(".filter-btn");
+
+
+        filterButtons.forEach(function (button) {
+
+            button.addEventListener("click", function () {
+
+
+                // Get selected filter
+
+                currentFilter =
+                    button.dataset.filter;
+
+
+                // Apply filter to video
+
+                video.style.filter =
+                    currentFilter;
+
+
+                // Remove active
+
+                filterButtons.forEach(
+                    function (btn) {
+
+                        btn.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                // Add active
+
+                button.classList.add(
+                    "active"
+                );
+
+            });
+
+        });
+
+
+
+        // ========================================
+        // START CAMERA
+        // ========================================
+
+        start.addEventListener(
+            "click",
+            function () {
+
+
+                navigator.mediaDevices
+                    .getUserMedia({
+
+                        video: {
+                            facingMode: "user"
+                        },
+
+                        audio: false
+
+                    })
+
+
+                    .then(function (stream) {
+
+
+                        video.srcObject =
+                            stream;
+
+
+                        start.textContent =
+                            "Camera Started";
+
+
+                        start.disabled =
+                            true;
+
+
+                    })
+
+
+                    .catch(function (error) {
+
+
+                        console.error(
+                            "Camera error:",
+                            error
+                        );
+
+
+                        alert(
+                            "Unable to access the camera."
+                        );
+
+                    });
+
+            }
+        );
+
+
+
+        // ========================================
+        // TAKE PHOTO
+        // ========================================
+
+        captureButton.addEventListener(
+            "click",
+            function () {
+
+
+                // Prevent another interval
+                // from starting
+
+                if (interval !== null) {
+
+                    return;
+
+                }
+
+
+                // ========================================
+                // YOUR ORIGINAL LOGIC
+                // ========================================
+
+                let count = 1;
+
+                let pic_count = 0;
+
+
+
+                interval = setInterval(
+                    function () {
+
+
+                        // Show number
+
+                        time.innerHTML =
+                            count;
+
+
+                        // Increase count
+
+                        count++;
+
+
+
+                        // ========================================
+                        // IF COUNT REACHES 4
+                        // TAKE PHOTO
+                        // ========================================
+
+                        if (count > 4) {
+
+
+                            // Set canvas size
+
+                            canvas.width =
+                                video.videoWidth;
+
+                            canvas.height =
+                                video.videoHeight;
+
+
+
+                            // Get canvas context
+
+                            const context =
+                                canvas.getContext(
+                                    "2d"
+                                );
+
+
+
+                            // Apply selected filter
+
+                            context.filter =
+                                currentFilter;
+
+
+
+                            // Capture video
+
+                            context.drawImage(
+
+                                video,
+
+                                0,
+                                0,
+
+                                canvas.width,
+                                canvas.height
+
+                            );
+
+
+
+                            // Reset canvas filter
+
+                            context.filter =
+                                "none";
+
+
+
+                            // Convert photo
+                            // into image
+
+                            const image =
+                                canvas.toDataURL(
+                                    "image/png"
+                                );
+
+
+
+                            // Save photo
+
+                            photos.push(
+                                image
+                            );
+
+
+
+                            // Count photo
+
+                            pic_count++;
+
+
+
+                            // Reset countdown
+
+                            count = 1;
+
+
+
+                            // ========================================
+                            // THREE PHOTOS DONE
+                            // ========================================
+
+                            if (
+                                pic_count >= 3
+                            ) {
+
+
+                                // Stop interval
+
+                                clearInterval(
+                                    interval
+                                );
+
+
+                                // Reset interval
+
+                                interval = null;
+
+
+                                // Clear countdown
+
+                                time.innerHTML =
+                                    "";
+
+
+                                // Create photo strip
+
+                                create();
+
+
+                            }
+
+                        }
+
+
+                    },
+
+                    1000
+
+                );
+
+            }
+        );
+
+
+
+        // ========================================
+        // CREATE PHOTO STRIP
+        // ========================================
+
+        function create() {
+
+
+            const photoWidth =
+                canvas.width;
+
+
+            const photoHeight =
+                canvas.height;
+
+
+            const frameSide =
+                40;
+
+
+            const topSpace =
+                40;
+
+
+            const gap =
+                10;
+
+
+            const bottomSpace =
+                100;
+
+
+
+            // ========================================
+            // FINAL CANVAS SIZE
+            // ========================================
+
+            final.width =
+                photoWidth +
+                frameSide * 2;
+
+
+            final.height =
+                topSpace +
+                (photoHeight * 3) +
+                (gap * 2) +
+                bottomSpace;
+
+
+
+            const dr =
+                final.getContext("2d");
+
+
+
+            // ========================================
+            // WHITE BACKGROUND
+            // ========================================
+
+            dr.fillStyle =
+                "white";
+
+
+            dr.fillRect(
+
+                0,
+                0,
+
+                final.width,
+                final.height
+
+            );
+
+
+
+            // ========================================
+            // DRAW EACH PHOTO
+            // ========================================
+
+            photos.forEach(
+                function (element, index) {
+
+
+                    const img =
+                        new Image();
+
+
+                    img.src =
+                        element;
+
+
+
+                    img.onload =
+                        function () {
+
+
+                            dr.drawImage(
+
+                                img,
+
+                                frameSide,
+
+                                topSpace +
+                                (
+                                    index *
+                                    (
+                                        photoHeight +
+                                        gap
+                                    )
+                                ),
+
+                                photoWidth,
+
+                                photoHeight
+
+                            );
+
+
+
+                            // ========================================
+                            // LAST PHOTO
+                            // ========================================
+
+                            if (
+                                index ===
+                                photos.length - 1
+                            ) {
+
+
+                                // PhotoBooth title
+
+                                dr.fillStyle =
+                                    "#222";
+
+
+                                dr.textAlign =
+                                    "center";
+
+
+                                dr.font =
+                                    "bold 24px Arial";
+
+
+                                dr.fillText(
+
+                                    "PHOTOBOOTH",
+
+                                    final.width / 2,
+
+                                    final.height - 50
+
+                                );
+
+
+
+                                // Adrian text
+
+                                dr.font =
+                                    "14px Arial";
+
+
+                                dr.fillText(
+
+                                    "ADRIAN • 2026",
+
+                                    final.width / 2,
+
+                                    final.height - 25
+
+                                );
+
+
+
+                                // ========================================
+                                // FINAL DOWNLOAD IMAGE
+                                // ========================================
+
+                                const image =
+                                    final.toDataURL(
+                                        "image/png"
+                                    );
+
+
+                                download.href =
+                                    image;
+
+                            }
+
+                        };
+
+                }
+            );
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
